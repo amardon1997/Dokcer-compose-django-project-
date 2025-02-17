@@ -1,0 +1,52 @@
+services:
+  mysql:
+    image : mysql
+    container_name : mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${countries}
+      MYSQL_USER: ${admin}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./mysql_data_new:/var/lib/mysql
+    ports:
+      - "3306:3307"
+    networks:
+      - twotierapllication
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping","-h","localhost","-u${DB_PASSWORD}","-p${DB_PASSWORD}"]
+      interval: 10s
+      retries: 5
+      start_period: 60s
+      timeout: 15s
+
+
+  django_app:
+    build:
+      context: .
+    container_name : django_app
+    environment:
+      ENGINE: ${DB_ENGINE} 
+      NAME: ${DB_NAME}
+      USER: ${DB_USER}
+      PASSWORD: ${DB_PASSWORD}
+    networks:
+      - twotierapllication
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+    restart: always
+
+networks:
+  twotierapllication:
+
+volumes:
+  mysql_data_new:
+
+
+
+  
+
+  
+
