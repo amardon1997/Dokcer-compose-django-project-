@@ -76,19 +76,30 @@ WSGI_APPLICATION = 'docker_application.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 import os
-from dotenv import load_dotenv
-# from pathlib import Path
+# from dotenv import load_dotenv
+# # from pathlib import Path
 
-load_dotenv()
+# load_dotenv()
 # Now access the variables using os.environ
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': "countries",
+#         'USER':'admin',
+#         'PASSWORD': 'Admin@123',
+#         'HOST':'mysql',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': "countries",
-        'USER':'admin',
-        'PASSWORD': 'Admin@123',
-        'HOST':'127.0.0.1',
-        'PORT': '3306',
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
+        'NAME': os.getenv('DB_NAME', 'countries'),
+        'USER': os.getenv('DB_USER', 'admin'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'Admin@123'),
+        'HOST': os.getenv('DB_HOST', 'mysql'),
+        'PORT': os.getenv('DB_PORT', '3306'),
     }
 }
 
@@ -128,7 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = '/vol/web/static'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

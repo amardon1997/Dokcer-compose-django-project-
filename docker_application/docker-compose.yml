@@ -1,35 +1,36 @@
 services:
   mysql:
-    image : mysql
-    container_name : mysql
+    image : mysql:8.0
+    container_name : mysql_db
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${countries}
-      MYSQL_USER: ${admin}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: Admin@123
+      MYSQL_DATABASE: countries
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: Admin@123
     volumes:
       - ./mysql_data_new:/var/lib/mysql
     ports:
-      - "3306:3307"
+      - "3306:3306"
     networks:
       - twotierapllication
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping","-h","localhost","-u${DB_PASSWORD}","-p${DB_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping","-h","localhost","-uadmin","-pAdmin@123"]
       interval: 10s
       retries: 5
       start_period: 60s
       timeout: 15s
-
 
   django_app:
     build:
       context: .
     container_name : django_app
     environment:
-      ENGINE: ${DB_ENGINE} 
-      NAME: ${DB_NAME}
-      USER: ${DB_USER}
-      PASSWORD: ${DB_PASSWORD}
+      DB_ENGINE: django.db.backends.mysql
+      DB_NAME: countries
+      DB_USER: admin
+      DB_PASSWORD: Admin@123
+      DB_HOST: mysql
+      DB_PORT: 3306
     networks:
       - twotierapllication
     ports:
